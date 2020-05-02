@@ -1,7 +1,7 @@
 "use strict";
 const readline = require('readline');
 const fs = require('fs');
-const file = `${__dirname}/../../assets/cachegrind.out.1588292840-_var_www_html_index_php.bak`
+const file = `${__dirname}/../../assets/cachegrind.out.1588292840-_var_www_html_index_php`
 
 const write = function(strings, ...values) {
   let result = ''
@@ -162,7 +162,17 @@ readInterface.on('close', function(line) {
       }
       return a
     }, []);
-    console.log(o)`
+
+    console.log('nodes: [')
+    for (let i=0; i<o.nodes.length; i++) {
+      console.log(o.nodes[i],',')
+    }
+    console.log('], edges: [')
+    for (let j=0; j<o.edges.length; j++) {
+      console.log(o.edges[j],',')
+    }
+    console.log(']')
+    `
 })
 
 /*
