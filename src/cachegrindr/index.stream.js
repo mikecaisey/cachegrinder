@@ -51,7 +51,10 @@ readInterface.on('line', function(line) {
     write`o.nodes.push({
       id: "fl${flId}",
       label: "fl: ${match[2]}",
-      size: 1
+      size: 1,
+      x: 0,
+      y: 0,
+      color: '#666'
     })`
   }
 
@@ -66,12 +69,16 @@ readInterface.on('line', function(line) {
     write`o.nodes.push({
       id: "fn${fnId}",
       label: "fn: ${match[2]}",
-      size: 1
+      size: 1,
+      x: 0,
+      y: 0,
+      color: '#666'
     })`
     write`o.edges.push({
       id: "fl${flId}fn${fnId}",
       source: "fl${flId}",
-      target: "fn${fnId}"
+      target: "fn${fnId}",
+      color: '#ccc'
     })`
   }
 
@@ -81,17 +88,18 @@ readInterface.on('line', function(line) {
   const reLineTimeMemory = /^([0-9]+)\s([0-9]+)\s([0-9]+)$/
   match = line.match(reLineTimeMemory)
   if (match !== null) {
+    let _flId = flId
+    let _fnId = fnId
+    const time = match[2]
+    const mem = match[3]
     if (cfnId !== null && cflId !== null) {
-      write`o.nodes[o.nodes.findIndex(x => x.id === 'fl${cflId}')]
-      .size += ${match[2]}`
-      write`o.nodes[o.nodes.findIndex(x => x.id === 'fn${cfnId}')]
-      .size += ${match[3]}`
-    } else {
-      write`o.nodes[o.nodes.findIndex(x => x.id === 'fl${flId}')]
-      .size += ${match[2]}`
-      write`o.nodes[o.nodes.findIndex(x => x.id === 'fn${fnId}')]
-      .size += ${match[3]}`
+      _flId = cflId
+      _fnId = cfnId
     }
+    write`o.nodes[o.nodes.findIndex(x => x.id === 'fl${_flId}')]
+    .x += ${time}`
+    write`o.nodes[o.nodes.findIndex(x => x.id === 'fn${_fnId}')]
+    .y += ${mem}`
   }
 
   // Update node by setting flId and fnId for next complexity match
@@ -128,7 +136,8 @@ readInterface.on('line', function(line) {
     write`o.edges.push({
       id: "fn${fnId}cfn${cfnId}",
       source: "fn${fnId}",
-      target: "fn${cfnId}"
+      target: "fn${cfnId}",
+      color: '#aa22ff'
     })`
   }
 
@@ -146,7 +155,14 @@ readInterface.on('line', function(line) {
 });
 
 readInterface.on('close', function(line) {
-  write`console.log(o)`
+  write`
+    o.edges = o.edges.reduce((a, v) => {
+      if (a.findIndex(x => x.id === v.id) < 0) {
+        a.push(v)
+      }
+      return a
+    }, []);
+    console.log(o)`
 })
 
 /*
