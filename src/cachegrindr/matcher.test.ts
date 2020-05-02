@@ -1,6 +1,6 @@
 import { describe, it } from 'mocha'
-import { assert } from 'chai'
-import { match } from './matcher'
+import { expect } from 'chai'
+import { match as matchFn, SigmaGrindFn, SigmaGrindObj } from './matcher'
 
 // https://valgrind.org/docs/manual/cl-format.html
 
@@ -9,6 +9,11 @@ import { match } from './matcher'
 // of subpositions, and the value of "events" is a list of event type names.
 describe('Key:Value pair meta data', () => {
   it('position value', () => {
+    const line = 'positions: line'
+    const o: SigmaGrindObj = { meta: { positions: [] } }
+    const fn: SigmaGrindFn = matchFn(line)
+    const result = fn(o)
+    expect(result.meta.positions[0]).to.equal('line')
   })
 })
 
@@ -17,6 +22,6 @@ describe('Key:Value pair meta data', () => {
 describe('Homer Simpson', () => {
   it('Bart should skate', () => {
     /** Test cases for Bart */
-    assert(true)
+    // assert(true)
   })
 })
