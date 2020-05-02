@@ -8,12 +8,21 @@ import { match as matchFn, SigmaGrindFn, SigmaGrindObj } from './matcher'
 // cost lines in the second part of the file: the value of "positions" is a list
 // of subpositions, and the value of "events" is a list of event type names.
 describe('Key:Value pair meta data', () => {
-  it('position value', () => {
+  it('positions value', () => {
     const line = 'positions: line'
-    const o: SigmaGrindObj = { meta: { positions: [] } }
+    const o: SigmaGrindObj = { meta: { positions: [], events: [] } }
     const fn: SigmaGrindFn = matchFn(line)
     const result = fn(o)
     expect(result.meta.positions[0]).to.equal('line')
+  })
+
+  it('events value', () => {
+    const line = 'events: Time Memory'
+    const o: SigmaGrindObj = { meta: { positions: [], events: [] } }
+    const fn: SigmaGrindFn = matchFn(line)
+    const result = fn(o)
+    expect(result.meta.events[0]).to.equal('Time')
+    expect(result.meta.events[1]).to.equal('Memory')
   })
 })
 
