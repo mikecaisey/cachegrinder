@@ -1,0 +1,133 @@
+version: 1
+creator: xdebug 2.9.4 (PHP 7.3.16)
+cmd: /var/www/html/index.php
+part: 1
+positions: line
+
+events: Time Memory
+
+fl=(1) php:internal
+fn=(1) php::define
+14 1 24
+
+fl=(1)
+fn=(1)
+21 0 24
+
+fl=(1)
+fn=(2) php::error_reporting
+24 0 408
+
+fl=(1)
+fn=(3) php::file_exists
+34 5 0
+
+fl=(1)
+fn=(1)
+23 1 24
+
+fl=(1)
+fn=(1)
+26 0 24
+
+fl=(1)
+fn=(1)
+29 1 24
+
+fl=(1)
+fn=(1)
+32 0 24
+
+fl=(1)
+fn=(1)
+35 0 24
+
+fl=(1)
+fn=(1)
+38 0 24
+
+fl=(1)
+fn=(1)
+49 0 24
+
+fl=(1)
+fn=(1)
+50 1 24
+
+fl=(1)
+fn=(1)
+51 0 24
+
+fl=(1)
+fn=(1)
+52 0 24
+
+fl=(1)
+fn=(1)
+53 0 24
+
+fl=(1)
+fn=(1)
+54 0 24
+
+fl=(1)
+fn=(1)
+55 0 24
+
+fl=(1)
+fn=(1)
+56 0 24
+
+fl=(1)
+fn=(1)
+80 0 24
+
+fl=(1)
+fn=(1)
+16 0 24
+
+fl=(2) /var/www/html/wp-includes/version.php
+fn=(4) require::/var/www/html/wp-includes/version.php
+1 2 0
+
+fl=(3) /var/www/html/wp-includes/load.php
+fn=(5) require::/var/www/html/wp-includes/load.php
+1 7 0
+
+fl=(1)
+fn=(6) php::phpversion
+131 0 32
+
+fl=(1)
+fn=(7) php::version_compare
+133 32 0
+
+fl=(1)
+fn=(8) php::extension_loaded
+141 1 0
+
+fl=(1)
+fn=(8)
+141 0 0
+
+fl=(3)
+fn=(9) wp_check_php_mysql_versions
+129 50 -32
+cfl=(1)
+cfn=(6)
+calls=1 0 0
+131 0 32
+cfl=(1)
+cfn=(7)
+calls=1 0 0
+133 32 0
+cfl=(1)
+cfn=(8)
+calls=1 0 0
+141 1 0
+cfl=(1)
+cfn=(8)
+calls=1 0 0
+141 0 0
+
+summary: 23543535 23453425
