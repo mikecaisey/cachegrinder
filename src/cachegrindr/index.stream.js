@@ -52,8 +52,8 @@ readInterface.on('line', function(line) {
       id: "fl${flId}",
       label: "fl: ${match[2]}",
       size: 1,
-      x: 0,
-      y: 0,
+      x: Math.random(),
+      y: Math.random(),
       color: '#666'
     })`
   }
@@ -70,8 +70,8 @@ readInterface.on('line', function(line) {
       id: "fn${fnId}",
       label: "fn: ${match[2]}",
       size: 1,
-      x: 0,
-      y: 0,
+      x: Math.random(),
+      y: Math.random(),
       color: '#666'
     })`
     write`o.edges.push({
@@ -97,9 +97,9 @@ readInterface.on('line', function(line) {
       _fnId = cfnId
     }
     write`o.nodes[o.nodes.findIndex(x => x.id === 'fl${_flId}')]
-    .x += ${time}`
+    .size += ${time}`
     write`o.nodes[o.nodes.findIndex(x => x.id === 'fn${_fnId}')]
-    .y += ${mem}`
+    .size += ${mem}`
   }
 
   // Update node by setting flId and fnId for next complexity match
@@ -151,7 +151,7 @@ readInterface.on('line', function(line) {
     cfnId = null
   }
 
-  // throw new Error('Error: Line uninterpreted')
+  // throw new Error('Error: Line uninterpreted', line)
 });
 
 readInterface.on('close', function(line) {
