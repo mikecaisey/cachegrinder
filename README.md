@@ -8,3 +8,8 @@ Translate PHP Xdebug Cachegrind files into JSON nodes and edges
 // JSON style rule set, pushdown-automata and finite state machine
 
 // parsed tree of the filtered view
+
+// Chart of translation
+// * cachegrind file
+// * javascript functions
+// * JSON nodes and edges
