@@ -1,7 +1,7 @@
 "use strict";
 const readline = require('readline');
 const fs = require('fs');
-const file = `${__dirname}/../../assets/cachegrind.out.1588292840-_var_www_html_index_php`
+const file = `${__dirname}/../../assets/cachegrind.out.1588292840-_var_www_html_index_php.bak`
 
 const write = function(strings, ...values) {
   let result = ''
@@ -19,16 +19,16 @@ const readInterface = readline.createInterface({
     console: false
 });
 
-// Start
+// Schema
 write`const o = { meta: {}, nodes: [], edges: []}`
 
-// state between lines
+// state between cachegrind/callgrind expressions
 let flId = null
 let fnId = null
 let cfnId = null
 let cflId = null
 
-// Interpret lines
+// Interpret line by line
 readInterface.on('line', function(line) {
 
   let match = null
@@ -155,6 +155,8 @@ readInterface.on('line', function(line) {
 });
 
 readInterface.on('close', function(line) {
+  // quick JSON renderer
+  // removes duplicate edges
   write`
     o.edges = o.edges.reduce((a, v) => {
       if (a.findIndex(x => x.id === v.id) < 0) {
@@ -163,15 +165,38 @@ readInterface.on('close', function(line) {
       return a
     }, []);
 
-    console.log('nodes: [')
+    let comma = ''
+    console.log('{ "nodes": [')
     for (let i=0; i<o.nodes.length; i++) {
-      console.log(o.nodes[i],',')
+      const node = o.nodes[i]
+      const keys = Object.keys(node)
+      console.log('{')
+      for (const key in node) {
+        let value = '"' + node[key] + '"'
+        if (['size', 'x', 'y'].indexOf(key) >= 0) { // TODO: Remove domain specific items
+          value = node[key]
+        }
+        comma = (keys.indexOf(key) < keys.length -1) ? ',' : ''
+        console.log('  "' + key + '": ' + value + comma)
+      }
+      comma = (i+1 < o.nodes.length) ? ',' : ''
+      console.log('}' + comma)
     }
-    console.log('], edges: [')
+
+    console.log('], "edges": [')
     for (let j=0; j<o.edges.length; j++) {
-      console.log(o.edges[j],',')
+      const edge = o.edges[j]
+      const keys = Object.keys(edge)
+      console.log('{')
+      for (const key in edge) {
+        let value = '"' + edge[key] + '"'
+        comma = (keys.indexOf(key) < keys.length -1) ? ',' : ''
+        console.log('  "' + key + '": ' + value + comma)
+      }
+      comma = (j+1 < o.edges.length) ? ',' : ''
+      console.log('}' + comma)
     }
-    console.log(']')
+    console.log('] }')
     `
 })
 
