@@ -1,7 +1,7 @@
 "use strict";
 const readline = require('readline');
 const fs = require('fs');
-const file = `${__dirname}/../../assets/cachegrind.out.1588292840-_var_www_html_index_php.bak`
+const file = `${__dirname}/../../assets/cachegrind.out.1588292840-_var_www_html_index_php`
 
 const write = function(strings, ...values) {
   let result = ''
