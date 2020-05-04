@@ -13,3 +13,6 @@ Translate PHP Xdebug Cachegrind files into JSON nodes and edges
 // * cachegrind file
 // * javascript functions
 // * JSON nodes and edges
+
+// Thoughts about what the size of nodes tell you in time and memory complexity.
+// .. What the nodes with the most edges tells you.
