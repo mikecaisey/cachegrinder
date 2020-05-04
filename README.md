@@ -1,5 +1,6 @@
-# cachegrinder
-Translate PHP Xdebug Cachegrind files into JSON nodes and edges
+# cachegrinder - An Xdebug Cachegrind translator (WIP)
+
+Cachegrind (a subset of Callgrind) has a context free grammar used to make declarative statements that describe time and memory costs of a prcedure. In the context of this repository the statements of time and memory costs are captured using Xdebug as PHP files and functions are executed by the interpretor. In this discussion the execution tree is of Wordpress.
 
 // All nodes joke chart
 
