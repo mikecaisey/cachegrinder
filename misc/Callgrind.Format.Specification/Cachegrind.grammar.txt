@@ -1,0 +1,89 @@
+/* 3. Callgrind Format Specification
+ * extracted from https://www.cs.cmu.edu/afs/cs.cmu.edu/project/cmt-40/Nice/RuleRefinement/bin/valgrind-3.2.0/docs/html/cl-format.html on Tue May 5, 2020, 12:31 (UTC+12)
+ * using tool https://bottlecaps.de/rr/ui
+ */
+
+ProfileDataFile ::= FormatVersion? Creator? PartData*
+
+FormatVersion ::= "version:" Space* Number "\n"
+
+Creator ::= "creator:" NoNewLineChar* "\n"
+
+PartData ::= (HeaderLine "\n")+ (BodyLine "\n")+
+
+HeaderLine ::= (empty line)
+  | ('#' NoNewLineChar*)
+  | PartDetail
+  | Description
+  | EventSpecification
+  | CostLineDef
+
+PartDetail ::= TargetCommand | TargetID
+
+TargetCommand ::= "cmd:" Space* NoNewLineChar*
+
+TargetID ::= ("pid"|"thread"|"part") ":" Space* Number
+
+Description ::= "desc:" Space* Name Space* ":" NoNewLineChar*
+
+EventSpecification ::= "event:" Space* Name InheritedDef? LongNameDef?
+
+InheritedDef ::= "=" InheritedExpr
+
+InheritedExpr ::= Name
+  | Number Space* ("*" Space*)? Name
+  | InheritedExpr Space* "+" Space* InheritedExpr
+
+LongNameDef ::= ":" NoNewLineChar*
+
+CostLineDef ::= "events:" Space* Name (Space+ Name)*
+  | "positions:" "instr"? (Space+ "line")?
+
+BodyLine ::= (empty line)
+  | ('#' NoNewLineChar*)
+  | CostLine
+  | PositionSpecification
+  | AssoziationSpecification
+
+CostLine ::= SubPositionList Costs?
+
+SubPositionList ::= (SubPosition+ Space+)+
+
+SubPosition ::= Number | "+" Number | "-" Number | "*"
+
+Costs ::= (Number Space+)+
+
+PositionSpecification ::= Position "=" Space* PositionName
+
+Position ::= CostPosition | CalledPosition
+
+CostPosition ::= "ob" | "fl" | "fi" | "fe" | "fn"
+
+CalledPosition ::= "cob" | "cfl" | "cfn"
+
+PositionName ::= ( "(" Number ")" )? (Space* NoNewLineChar* )?
+
+AssoziationSpecification ::= CallSpezification
+  | JumpSpecification
+
+CallSpecification ::= CallLine "\n" CostLine
+
+CallLine ::= "calls=" Space* Number Space+ SubPositionList
+
+JumpSpecification ::= ...
+
+Space ::= " " | "\t"
+
+Number ::= HexNumber | (Digit)+
+
+Digit ::= "0" | ... | "9"
+
+HexNumber ::= "0x" (Digit | HexChar)+
+
+HexChar ::= "a" | ... | "f" | "A" | ... | "F"
+
+Name ::= Alpha (Digit | Alpha)*
+
+Alpha ::= "a" | ... | "z" | "A" | ... | "Z"
+
+NoNewLineChar ::= all characters without "\n"
