@@ -50,7 +50,7 @@ readInterface.on('line', function(line) {
     flId = `${match[1]}`
     write`o.nodes.push({
       id: "fl${flId}",
-      label: "fl: ${match[2]}"
+      label: "fl: ${match[2]}",
       events: {
         time: 0,
         memory: 0
