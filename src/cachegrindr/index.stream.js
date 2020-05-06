@@ -51,10 +51,10 @@ readInterface.on('line', function(line) {
     write`o.nodes.push({
       id: "fl${flId}",
       label: "fl: ${match[2]}",
-      size: 1,
-      x: Math.random(),
-      y: Math.random(),
-      color: '#666'
+      events: {
+        time: 0,
+        memory: 0
+      }
     })`
   }
 
@@ -69,16 +69,15 @@ readInterface.on('line', function(line) {
     write`o.nodes.push({
       id: "fn${fnId}",
       label: "fn: ${match[2]}",
-      size: 1,
-      x: Math.random(),
-      y: Math.random(),
-      color: '#666'
+      events: {
+        time: 0,
+        memory: 0
+      }
     })`
     write`o.edges.push({
       id: "fl${flId}fn${fnId}",
       source: "fl${flId}",
-      target: "fn${fnId}",
-      color: '#ccc'
+      target: "fn${fnId}"
     })`
   }
 
@@ -91,15 +90,15 @@ readInterface.on('line', function(line) {
     let _flId = flId
     let _fnId = fnId
     const time = match[2]
-    const mem = match[3]
+    const memory = match[3]
     if (cfnId !== null && cflId !== null) {
       _flId = cflId
       _fnId = cfnId
     }
     write`o.nodes[o.nodes.findIndex(x => x.id === 'fl${_flId}')]
-    .size += ${time}`
+      .events.time += ${time}`
     write`o.nodes[o.nodes.findIndex(x => x.id === 'fn${_fnId}')]
-    .size += ${mem}`
+      .events.memory += ${memory}`
   }
 
   // Update node by setting flId and fnId for next complexity match
@@ -136,8 +135,7 @@ readInterface.on('line', function(line) {
     write`o.edges.push({
       id: "fn${fnId}cfn${cfnId}",
       source: "fn${fnId}",
-      target: "fn${cfnId}",
-      color: '#aa22ff'
+      target: "fn${cfnId}"
     })`
   }
 
