@@ -38,6 +38,7 @@ readInterface.on('line', function(line) {
   match = line.match(reMeta)
   if (match !== null) {
     write`o.meta.${match[1]} = "${match[2]}"`
+    return;
   }
 
   // create node with file name and id, set fl var
@@ -55,6 +56,7 @@ readInterface.on('line', function(line) {
         memory: 0
       }
     })`
+    return;
   }
 
   // create node with function name and id,
@@ -78,6 +80,7 @@ readInterface.on('line', function(line) {
       source: "fl${flId}",
       target: "fn${fnId}"
     })`
+    return;
   }
 
   // sum time complexity onto fl
@@ -98,6 +101,7 @@ readInterface.on('line', function(line) {
       .events.time += ${time}`
     write`o.nodes[o.nodes.findIndex(x => x.id === 'fn${_fnId}')]
       .events.memory += ${memory}`
+    return;
   }
 
   // Update node by setting flId and fnId for next complexity match
@@ -107,12 +111,14 @@ readInterface.on('line', function(line) {
   match = line.match(reUpdateFile)
   if (match !== null) {
     flId = match[1]
+    return;
   }
 
   const reUpdateFn = /^fn=\((\d+)\)$/
   match = line.match(reUpdateFn)
   if (match !== null) {
     fnId = match[1]
+    return;
   }
 
   // Add an edge for file:function calls
@@ -120,12 +126,14 @@ readInterface.on('line', function(line) {
   match = line.match(reCallFile)
   if (match !== null) {
     cflId = match[1]
+    return;
   }
 
   const reCallFn = /^cfn=\((\d+)\)$/
   match = line.match(reCallFn)
   if (match !== null) {
     cfnId = match[1]
+    return;
   }
 
   const reCalls = /^calls=/
@@ -136,6 +144,7 @@ readInterface.on('line', function(line) {
       source: "fn${fnId}",
       target: "fn${cfnId}"
     })`
+    return;
   }
 
   // reset fl, fn vars to null on empty line
@@ -146,9 +155,11 @@ readInterface.on('line', function(line) {
     fnId = null
     cflId = null
     cfnId = null
+    return;
   }
 
-  // throw new Error('Error: Line uninterpreted', line)
+  console.log('>>> ', line);
+  throw new Error('Error: Uninterpreted Line: ', line)
 });
 
 readInterface.on('close', function(line) {
