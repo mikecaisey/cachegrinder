@@ -1,7 +1,6 @@
 "use strict";
 const readline = require('readline');
 const fs = require('fs');
-const file = `${__dirname}/../../assets/cachegrind.out.1588292840-_var_www_html_index_php`
 
 const write = function(strings, ...values) {
   let result = ''
@@ -13,13 +12,13 @@ const write = function(strings, ...values) {
   console.log(result);
 }
 
-const readInterface = readline.createInterface({
-    input: fs.createReadStream(file),
-    // output: process.stdout,
-    console: false
+var readInterface = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+  terminal: false
 });
 
-// Schema
+// Schema - the accumulator
 write`const o = { meta: {}, nodes: [], edges: []}`
 
 // state between cachegrind/callgrind expressions
