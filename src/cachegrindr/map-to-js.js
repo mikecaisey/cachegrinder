@@ -12,14 +12,14 @@ const write = function(strings, ...values) {
   console.log(result);
 }
 
-var readInterface = readline.createInterface({
+const readInterface = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
   terminal: false
 });
 
 // Schema - the accumulator
-write`const o = { meta: {}, nodes: [], edges: []}`
+write`const o = { meta: {}, nodes: [], edges: []};`
 
 // state between cachegrind/callgrind expressions
 let flId = null
@@ -48,14 +48,7 @@ readInterface.on('line', function(line) {
   match = line.match(reCreateFile)
   if (match !== null) {
     flId = `${match[1]}`
-    write`o.nodes.push({
-      id: "fl${flId}",
-      label: "fl: ${match[2]}",
-      events: {
-        time: 0,
-        memory: 0
-      }
-    })`
+    write`o.nodes.push({id: "fl${flId}",label: "fl: ${match[2]}",events:{time: 0,memory: 0}});`
     return;
   }
 
@@ -67,26 +60,15 @@ readInterface.on('line', function(line) {
   match = line.match(reCreateFn)
   if (match !== null) {
     fnId = `${match[1]}`
-    write`o.nodes.push({
-      id: "fn${fnId}",
-      label: "fn: ${match[2]}",
-      events: {
-        time: 0,
-        memory: 0
-      }
-    })`
-    write`o.edges.push({
-      id: "fl${flId}fn${fnId}",
-      source: "fl${flId}",
-      target: "fn${fnId}"
-    })`
+    write`o.nodes.push({id: "fn${fnId}",label: "fn: ${match[2]}",events: {time: 0,memory: 0}});`
+    write`o.edges.push({id: "fl${flId}fn${fnId}",source: "fl${flId}",target: "fn${fnId}"});`
     return;
   }
 
   // sum time complexity onto fl
   // sum memory complexity onto fn
   // e.g. 21 0 24 (line, time, memory)
-  const reLineTimeMemory = /^([0-9]+)\s([0-9]+)\s([0-9]+)$/
+  const reLineTimeMemory = /^([0-9]+)\s(-?[0-9]+)\s(-?[0-9]+)$/
   match = line.match(reLineTimeMemory)
   if (match !== null) {
     let _flId = flId
@@ -97,10 +79,8 @@ readInterface.on('line', function(line) {
       _flId = cflId
       _fnId = cfnId
     }
-    write`o.nodes[o.nodes.findIndex(x => x.id === 'fl${_flId}')]
-      .events.time += ${time}`
-    write`o.nodes[o.nodes.findIndex(x => x.id === 'fn${_fnId}')]
-      .events.memory += ${memory}`
+    write`o.nodes[o.nodes.findIndex(x => x.id === 'fl${_flId}')].events.time += ${time};`
+    write`o.nodes[o.nodes.findIndex(x => x.id === 'fn${_fnId}')].events.memory += ${memory};`
     return;
   }
 
@@ -139,11 +119,7 @@ readInterface.on('line', function(line) {
   const reCalls = /^calls=/
   match = line.match(reCalls)
   if (match !== null) {
-    write`o.edges.push({
-      id: "fn${fnId}cfn${cfnId}",
-      source: "fn${fnId}",
-      target: "fn${cfnId}"
-    })`
+    write`o.edges.push({id: "fn${fnId}cfn${cfnId}",source: "fn${fnId}",target: "fn${cfnId}"});`
     return;
   }
 
@@ -159,53 +135,53 @@ readInterface.on('line', function(line) {
   }
 
   console.log('>>> ', line);
-  throw new Error('Error: Uninterpreted Line: ', line)
+  throw new Error('Error: Uninterpreted Line')
 });
 
 readInterface.on('close', function(line) {
-  // quick JSON renderer
-  // removes duplicate edges
-  write`
-    o.edges = o.edges.reduce((a, v) => {
-      if (a.findIndex(x => x.id === v.id) < 0) {
-        a.push(v)
-      }
-      return a
-    }, []);
-
-    let comma = ''
-    console.log('{ "nodes": [')
-    for (let i=0; i<o.nodes.length; i++) {
-      const node = o.nodes[i]
-      const keys = Object.keys(node)
-      console.log('{')
-      for (const key in node) {
-        let value = '"' + node[key] + '"'
-        if (['size', 'x', 'y'].indexOf(key) >= 0) { // TODO: Remove domain specific items
-          value = node[key]
-        }
-        comma = (keys.indexOf(key) < keys.length -1) ? ',' : ''
-        console.log('  "' + key + '": ' + value + comma)
-      }
-      comma = (i+1 < o.nodes.length) ? ',' : ''
-      console.log('}' + comma)
-    }
-
-    console.log('], "edges": [')
-    for (let j=0; j<o.edges.length; j++) {
-      const edge = o.edges[j]
-      const keys = Object.keys(edge)
-      console.log('{')
-      for (const key in edge) {
-        let value = '"' + edge[key] + '"'
-        comma = (keys.indexOf(key) < keys.length -1) ? ',' : ''
-        console.log('  "' + key + '": ' + value + comma)
-      }
-      comma = (j+1 < o.edges.length) ? ',' : ''
-      console.log('}' + comma)
-    }
-    console.log('] }')
-    `
+//   // quick JSON renderer
+//   // removes duplicate edges
+//   write`
+//     o.edges = o.edges.reduce((a, v) => {
+//       if (a.findIndex(x => x.id === v.id) < 0) {
+//         a.push(v)
+//       }
+//       return a
+//     }, []);
+//
+//     let comma = ''
+//     console.log('{ "nodes": [')
+//     for (let i=0; i<o.nodes.length; i++) {
+//       const node = o.nodes[i]
+//       const keys = Object.keys(node)
+//       console.log('{')
+//       for (const key in node) {
+//         let value = '"' + node[key] + '"'
+//         if (['size', 'x', 'y'].indexOf(key) >= 0) { // TODO: Remove domain specific items
+//           value = node[key]
+//         }
+//         comma = (keys.indexOf(key) < keys.length -1) ? ',' : ''
+//         console.log('  "' + key + '": ' + value + comma)
+//       }
+//       comma = (i+1 < o.nodes.length) ? ',' : ''
+//       console.log('}' + comma)
+//     }
+//
+//     console.log('], "edges": [')
+//     for (let j=0; j<o.edges.length; j++) {
+//       const edge = o.edges[j]
+//       const keys = Object.keys(edge)
+//       console.log('{')
+//       for (const key in edge) {
+//         let value = '"' + edge[key] + '"'
+//         comma = (keys.indexOf(key) < keys.length -1) ? ',' : ''
+//         console.log('  "' + key + '": ' + value + comma)
+//       }
+//       comma = (j+1 < o.edges.length) ? ',' : ''
+//       console.log('}' + comma)
+//     }
+//     console.log('] }')
+//     `
 })
 
 /*
