@@ -20,3 +20,6 @@ The output schema follows:
 
 ## Schema
 `const data = { nodes: [], edges: [] }`
+
+## Assets
+The cachegrind files `/assets/*` included are from a vanilla runtime of Wordpress in action.
